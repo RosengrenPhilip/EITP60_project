@@ -9,7 +9,9 @@ ELMO manual is in [resources/ELMODocumentation.pdf](resources/ELMODocumentation.
 | Path | Contents |
 | --- | --- |
 | `external/ELMO/` | Upstream ELMO simulator, a git submodule pinned to a fixed commit (unmodified) |
-| `src/` | Our target C/assembly code and the Python package `eitp60` |
+| `src/targets/` | Target C/assembly code that ELMO simulates, one folder per target |
+| `src/targets/common/` | Shared startup code, linker script, ELMO helper functions and build rules |
+| `src/eitp60/` | Python package: trace loading, TVLA, CPA |
 | `analysis/` | Analysis scripts and notebooks (TVLA, CPA, ...) |
 | `figures/` | Generated figures for the report |
 | `scripts/` | Setup and build helpers |
@@ -36,17 +38,26 @@ on Windows or in WSL through uv.
 
 When you clone this repo fresh, also run `git submodule update --init`.
 
-## Running ELMO
+## Building and running a target
 
-ELMO reads its config (`elmodefines.h`) and coefficient file relative to the
-current directory, so it is run from `external/ELMO`:
+Each target lives in its own folder under `src/targets/`. To start a new one,
+copy `src/targets/template/` and edit `main.c` (add more `.c` files to `SRCS`
+in its `Makefile`). In WSL:
 
 ```bash
-cd external/ELMO
-./elmo path/to/target.bin
+cd src/targets/template
+make        # build main.bin
+make run    # build, then simulate with ELMO
 ```
 
-Traces are written to `external/ELMO/output/traces/`.
+ELMO writes traces to `external/ELMO/output/traces/`, the inputs read with
+`randbyte()` to `output/randdata.txt` and the bytes printed with
+`printbyte()` to `output/printdata.txt`. Load them in Python with
+`eitp60.traces`. Then, on Windows:
+
+```powershell
+uv run analysis/cpa_template.py   # sanity check: recovers the template's key
+```
 
 ## Upstream code
 
