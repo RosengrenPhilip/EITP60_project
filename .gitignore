@@ -1,6 +1,7 @@
 ELMO/output/
 ELMO/elmo
 #armgrejer nedan 
+*.o
 *.elf
 *.bin
 *.list
