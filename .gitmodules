@@ -1,0 +1,4 @@
+[submodule "external/ELMO"]
+	path = external/ELMO
+	url = https://github.com/bristol-sca/ELMO.git
+	ignore = dirty

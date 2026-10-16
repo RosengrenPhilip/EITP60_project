@@ -1,0 +1,11 @@
+ELMO/output/
+ELMO/elmo
+#armgrejer nedan 
+*.elf
+*.bin
+*.list
+*.map
+*.d
+__pycache__/
+.DS_Store
+.venv/
