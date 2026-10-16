@@ -11,6 +11,11 @@ sudo apt-get install -y build-essential gcc-arm-none-eabi libnewlib-arm-none-eab
 
 git submodule update --init external/ELMO
 
+# Use ELMO's original Cortex-M0 leakage model (ST STM32F0, coeffs.txt)
+# instead of the upstream default, a Cortex-M3 model.
+sed -i 's/#define COEFFSFILE "coeffs_M3.txt"/#define COEFFSFILE "coeffs.txt"/' external/ELMO/elmodefines.h
+grep -q '#define COEFFSFILE "coeffs.txt"' external/ELMO/elmodefines.h
+
 # -B forces a rebuild: the repo ships a prebuilt Linux binary we don't trust.
 make -B -C external/ELMO
 

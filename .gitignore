@@ -9,4 +9,4 @@ ELMO/elmo
 *.d
 __pycache__/
 .DS_Store
-.venv/
+.venv/data/

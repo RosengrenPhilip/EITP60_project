@@ -1,6 +1,8 @@
 """Sanity check of the whole pipeline: recover the template target's key with CPA.
 
 Build and simulate first (in WSL):  cd src/targets/template && make run
+then copy external/ELMO/output/{traces,randdata.txt,printdata.txt} to
+data/template/ (each ELMO run overwrites output/).
 Then run (on Windows):              uv run analysis/cpa_template.py
 """
 
@@ -31,8 +33,9 @@ def _make_sbox() -> np.ndarray:
 
 SBOX = _make_sbox()
 
-traces = load_traces()
-inputs = load_inputs()
+DATA = PROJECT_ROOT / "data" / "template"
+traces = load_traces(DATA)
+inputs = load_inputs(output_dir=DATA)
 print(f"{traces.shape[0]} traces, {traces.shape[1]} samples each")
 
 guesses = np.arange(256, dtype=np.uint8)

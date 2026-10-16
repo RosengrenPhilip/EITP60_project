@@ -8,7 +8,7 @@ ELMO manual is in [resources/ELMODocumentation.pdf](resources/ELMODocumentation.
 
 | Path | Contents |
 | --- | --- |
-| `external/ELMO/` | Upstream ELMO simulator, a git submodule pinned to a fixed commit (unmodified) |
+| `external/ELMO/` | Upstream ELMO simulator, a git submodule pinned to a fixed commit (see ELMO configuration below) |
 | `src/targets/` | Target C/assembly code that ELMO simulates, one folder per target |
 | `src/targets/common/` | Shared startup code, linker script, ELMO helper functions and build rules |
 | `src/eitp60/` | Python package: trace loading, TVLA, CPA |
@@ -58,6 +58,13 @@ ELMO writes traces to `external/ELMO/output/traces/`, the inputs read with
 ```powershell
 uv run analysis/cpa_template.py   # sanity check: recovers the template's key
 ```
+
+## ELMO configuration
+
+`scripts/setup_wsl.sh` makes one change to upstream ELMO before building it:
+`COEFFSFILE` in `elmodefines.h` is set to `coeffs.txt`, ELMO's original
+Cortex-M0 leakage model (ST STM32F0), instead of the upstream default
+`coeffs_M3.txt` (a Cortex-M3 model). All other settings are upstream defaults.
 
 ## Upstream code
 
