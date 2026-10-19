@@ -2,12 +2,12 @@
 
 import numpy as np
 
-# Hamming weight of every byte value, a common leakage model.
+# Hamming weight of every byte value
 HW = np.array([bin(x).count("1") for x in range(256)], dtype=np.uint8)
 
 
 def correlate(hypotheses: np.ndarray, traces: np.ndarray) -> np.ndarray:
-    """Pearson correlation of each hypothesis with each trace sample.
+    """pearson coeff for each hypothesis with every trace sample
 
     hypotheses: (n_traces, n_guesses) predicted leakage per key guess
     traces:     (n_traces, n_samples)
@@ -21,6 +21,6 @@ def correlate(hypotheses: np.ndarray, traces: np.ndarray) -> np.ndarray:
         return np.nan_to_num(num / denom)
 
 
-def rank_guesses(correlation: np.ndarray) -> np.ndarray:
+def rank_guesses(correlation: np.ndarray) -> np.ndarray:    
     """Key guesses sorted from most to least likely (by peak |correlation|)."""
     return np.argsort(-np.abs(correlation).max(axis=1))
