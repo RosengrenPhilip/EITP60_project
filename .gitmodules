@@ -2,3 +2,6 @@
 	path = external/ELMO
 	url = https://github.com/bristol-sca/ELMO.git
 	ignore = dirty
+[submodule "external/nist-lwc-power-analysis"]
+	path = external/nist-lwc-power-analysis
+	url = https://github.com/kudelskisecurity/nist-lwc-power-analysis
