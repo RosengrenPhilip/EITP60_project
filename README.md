@@ -62,6 +62,11 @@ uv run analysis/part2_dumbo/plot_dumbo.py           # all other dumbo figures
 σ = 0-6, which takes about 40 hours.
 ## reproducibility
 
+- elmo inputs: `main.c` reads each input byte with `randbyte()`, which elmo
+  answers with `rand()` and logs to `randdata.txt`. the number of traces is
+  `NOTRACES` (200) in `main.c`.
+- elmo configuration: unmodified defaults, `external/ELMO/elmodefines.h` and
+  the cortex-m0 leakage model in `external/ELMO/coeffs.txt`.
 - the traces (about 120 mb) are not in git. `data/dumbo/randdata.txt` and
   `data/dumbo/printdata.txt` from the run used in the report are.
 - a new elmo run may draw different random inputs, so results can differ
