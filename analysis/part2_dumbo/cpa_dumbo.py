@@ -1,4 +1,5 @@
-import matplotlib.pyplot as plt
+import re
+
 import numpy as np
 
 from eitp60.cpa import HW, correlate, rank_guesses
@@ -24,33 +25,42 @@ SBOX = np.array([
     0x3e, 0x3d, 0x3b, 0x30, 0x32, 0x31, 0x34, 0x3f, 0x37, 0x3a, 0x38, 0x35, 0x39, 0x3c, 0x33, 0x36,
     0x6e, 0x6d, 0x6b, 0x60, 0x62, 0x61, 0x64, 0x6f, 0x67, 0x6a, 0x68, 0x65, 0x69, 0x6c, 0x63, 0x66
 ], dtype=np.uint8)
-DATA = PROJECT_ROOT / "data" / "dumbo"
 
-traces = load_traces(DATA)
-ad = load_inputs(block_size=20,output_dir=DATA)
-mask = load_outputs(block_size=20, output_dir=DATA)[0]
-print(f"{traces.shape[0]} traces, {traces.shape[1]} samples each")
 
-guesses = np.arange(256, dtype=np.uint8)
-recovered = []
-#for byte in range(ad.shape[1]):
-    # hamming weight of the sbox
-hypotheses = HW[SBOX[ad[:, 1, None] ^ guesses]].astype(float)
-corr = correlate(hypotheses, traces)
-recovered.append(rank_guesses(corr)[0])
-#if byte == 0:
-corr_byte0 = corr
 
-print(f"Recovered mask byte 1: 0x{recovered[0]:02x}, true: 0x{mask[1]:02x}")
+def load(DATA, block_size=20):
+    traces = load_traces(DATA)
+    ad = load_inputs(block_size,output_dir=DATA)
+    mask = load_outputs(block_size, output_dir=DATA)[0]
+    print(f"{traces.shape[0]} traces, {traces.shape[1]} samples each")
+    return traces, ad, mask
 
-best = rank_guesses(corr_byte0)[0]
-plt.plot(np.abs(corr_byte0).T, color="lightgray", linewidth=0.5)
-plt.plot(np.abs(corr_byte0[best]), color="tab:red", label=f"best guess 0x{best:02x}")
-plt.xlim(0, 3000)
-plt.xlabel("Sample (cycle)")
-plt.ylabel("|correlation|")
-plt.title("CPA on mask in AD1 (dumbo)")
-plt.legend()
-out = PROJECT_ROOT / "figures" / "cpa_dumbo.png"
-plt.savefig(out, dpi=150)
-print("Saved", out)
+
+# Round 1 XORs these into bytes 0 and 19 before the S-box (spongent_round1 in main.c)
+ROUND_CONSTANT = np.zeros(20, dtype=np.uint8)
+ROUND_CONSTANT[0] = 0x75
+ROUND_CONSTANT[19] = 0xAE
+
+
+def attack(traces, ad):
+    guesses = np.arange(256, dtype=np.uint8)
+    recovered = []
+    for byte in range(ad.shape[1]):
+        # hamming weight of the sbox
+        hypotheses = HW[SBOX[(ad[:, byte, None] ^ ROUND_CONSTANT[byte]) ^ guesses]].astype(float)
+        corr = correlate(hypotheses, traces)
+        recovered.append(rank_guesses(corr)[0])
+        if byte == 1:
+            corr_byte1 = corr
+    return recovered, corr_byte1
+
+#made this a main function so other python files can use attack.
+if __name__ == "__main__":
+    DATA = PROJECT_ROOT / "data" / "dumbo"
+
+    traces, ad, mask = load(DATA)
+    recovered, corr_byte1 = attack(traces, ad)
+
+    print("Recovered mask:", bytes(recovered).hex())
+    print("True mask:     ", bytes(mask).hex())
+    # Figures: analysis/part2_dumbo/plot_dumbo.py

@@ -3,7 +3,7 @@
 Needs data/dumbo/traces/ copied from external/ELMO/output/ after
 `make run` in src/targets/dumbo.
 
-Run (on Windows):  uv run analysis/plot_trace_dumbo.py
+Run (on Windows):  uv run analysis/part2_dumbo/plot_trace_dumbo.py
 """
 
 import matplotlib.pyplot as plt

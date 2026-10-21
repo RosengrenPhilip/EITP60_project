@@ -1,8 +1,6 @@
-"""Correlation Power Analysis helpers (independent of the target algorithm)."""
-
 import numpy as np
 
-# Hamming weight of every byte value
+# hamming weight of every byte value
 HW = np.array([bin(x).count("1") for x in range(256)], dtype=np.uint8)
 
 
@@ -22,5 +20,4 @@ def correlate(hypotheses: np.ndarray, traces: np.ndarray) -> np.ndarray:
 
 
 def rank_guesses(correlation: np.ndarray) -> np.ndarray:    
-    """Key guesses sorted from most to least likely (by peak |correlation|)."""
     return np.argsort(-np.abs(correlation).max(axis=1))

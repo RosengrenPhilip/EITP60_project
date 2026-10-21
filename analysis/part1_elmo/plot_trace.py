@@ -1,6 +1,6 @@
 """Plot one ELMO trace file.
 
-Usage:  uv run analysis/plot_trace.py data/mbedaes/traces/trace00001.trc
+Usage:  uv run analysis/part1_elmo/plot_trace.py data/mbedaes/traces/trace00001.trc
 """
 
 import sys

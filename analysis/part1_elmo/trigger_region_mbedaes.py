@@ -3,7 +3,7 @@
 Needs data/mbedaes/ with traces/ and asmtrace00001.txt copied from
 external/ELMO/output/ after running Examples/DPATraces/MBedAES in ELMO.
 
-Run (on Windows):  uv run analysis/trigger_region_mbedaes.py
+Run (on Windows):  uv run analysis/part1_elmo/trigger_region_mbedaes.py
 
 ELMO's asmtrace00001.txt logs the instructions of trace 1, one line per
 trace sample (cycle). Mapping each sample to its instruction address and the
